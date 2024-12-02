@@ -1,0 +1,32 @@
+project:
+  type: book
+
+book:
+  title: "Introduction to programming with R"
+  author: "Kaan Öztürk"
+  date: "2024-11-28"
+  chapters:
+    - index.qmd
+    - 1 - First Steps.ipynb
+    - 2 - Vectors.ipynb
+    - 3 - Basic plotting and random numbers.ipynb
+    - 4 - Functions.ipynb
+    - 5 - Decision structures.ipynb
+    - 6 - Loops.ipynb
+    - 7 - Matrices.ipynb
+    - 8 - Lists.ipynb
+    - 9 - Data Frames.ipynb
+    - 10 - Factors.ipynb
+    - 11 - Data import & plotting.ipynb
+    - 12 - Correlation and regression analysis.ipynb
+number-depth: 0
+bibliography: references.bib
+
+format:
+  html:
+    theme: cosmo
+  pdf:
+    documentclass: scrreprt
+
+
+
