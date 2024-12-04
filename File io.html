@@ -6,10 +6,8 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Kaan Öztürk">
-<meta name="dcterms.date" content="2024-11-28">
 
-<title>Introduction to programming with R</title>
+<title>Introduction to programming with R - 12&nbsp; File input-output</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -22,6 +20,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -32,7 +64,8 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./First Steps.html" rel="next">
+<link href="./More plotting.html" rel="next">
+<link href="./Factors.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -66,7 +99,7 @@ ul.task-list li input[type="checkbox"] {
 
 </head>
 
-<body class="nav-sidebar floating slimcontent">
+<body class="nav-sidebar floating">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -75,7 +108,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html">Preface</a></li></ol></nav>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./File io.html"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">File input-output</span></a></li></ol></nav>
       <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
       </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
@@ -102,7 +135,7 @@ ul.task-list li input[type="checkbox"] {
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./index.html" class="sidebar-item-text sidebar-link active">
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Preface</span></a>
   </div>
 </li>
@@ -174,7 +207,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./File io.html" class="sidebar-item-text sidebar-link">
+  <a href="./File io.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">File input-output</span></span></a>
   </div>
 </li>
@@ -200,35 +233,24 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#preface" id="toc-preface" class="nav-link active" data-scroll-target="#preface">Preface</a></li>
+  <li><a href="#reading-data-from-a-text-file" id="toc-reading-data-from-a-text-file" class="nav-link active" data-scroll-target="#reading-data-from-a-text-file">Reading data from a text file</a></li>
+  <li><a href="#writing-data-to-a-file" id="toc-writing-data-to-a-file" class="nav-link" data-scroll-target="#writing-data-to-a-file">Writing data to a file</a></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
-<main class="content page-columns page-full" id="quarto-document-content">
+<main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Introduction to programming with R</h1>
+<h1 class="title"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">File input-output</span></h1>
 </div>
 
 
 
 <div class="quarto-title-meta">
 
-    <div>
-    <div class="quarto-title-meta-heading">Author</div>
-    <div class="quarto-title-meta-contents">
-             <p>Kaan Öztürk </p>
-          </div>
-  </div>
     
-    <div>
-    <div class="quarto-title-meta-heading">Published</div>
-    <div class="quarto-title-meta-contents">
-      <p class="date">November 28, 2024</p>
-    </div>
-  </div>
   
     
   </div>
@@ -236,16 +258,244 @@ ul.task-list li input[type="checkbox"] {
 
 </header>
 
-<section id="preface" class="level1 unnumbered page-columns page-full">
-<h1 class="unnumbered">Preface</h1>
-<p>This book grew out of the course <em>CMPE 140: Introduction to Programming for Economics and Management</em>, which I taught at Boğaziçi University between 2017 and 2021.</p>
-<p>Currently the chapters are direct conversions of Jupyter notebooks used in class presentations, so they are a bit rough around the edges. I may remove the roughest edges, but unless I have to teach the course again and revise the notes, I’m afraid they will not be a complete reference. Still, they might be of some use to beginners.</p>
-<p>This course is designed to be an introduction to structured programming using the R language. As such, we discuss only the the so-called core language, and not the rich ecosystem of data analysis and statistics tools.</p>
-<div class="page-columns page-full"><p>There are many good books about using R for data analysis, statistical inference, or data visualization. However, they are mainly aimed at users who have a background in other coding languages, or mature programmers with a specific data task in mind. Books that teach R as a first programming language are rare. Two books I have particularly found useful are Matloff’s <em>The Art of R Programming</em><a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> and Davies’ <em>The Book of R</em><a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>.</p><div class="no-row-height column-margin column-container"><li id="fn1"><p><sup>1</sup>&nbsp;Norman Matloff, The Art of R Programming. No Starch Press, 2011.</p></li><li id="fn2"><p><sup>2</sup>&nbsp;Tilman M. Davies, The Book of R. No Starch Press, 2016.</p></li></div></div>
+<section id="reading-data-from-a-text-file" class="level2">
+<h2 class="anchored" data-anchor-id="reading-data-from-a-text-file">Reading data from a text file</h2>
+<p>Data is frequently stored in tabular form in text files. The <code>read.table()</code> function can read a file from your disk and return a data frame containing that data.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">help</span>(read.table)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Suppose we have a data file <em>mydata.txt</em> with the following contents:</p>
+<pre><code>Can 1.70 65
+Cem 1.75 66
+Hande 1.62 61
+Lale 1.76 64
+Arda 1.78 63
+Bilgin 1.77 84
+Cem 1.69 75
+Ozlem 1.75 65
+Ali 1.73 75
+Haluk 1.71 81</code></pre>
+<p>The file can be read into a data frame simply with:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>hwdata <span class="ot">&lt;-</span> <span class="fu">read.table</span>(<span class="st">"mydata.txt"</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>hwdata</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>       V1   V2 V3
+1     Can 1.70 65
+2     Cem 1.75 66
+3   Hande 1.62 61
+4    Lale 1.76 64
+5    Arda 1.78 63
+6  Bilgin 1.77 84
+7     Cem 1.69 75
+8   Ozlem 1.75 65
+9     Ali 1.73 75
+10  Haluk 1.71 81</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(hwdata)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "data.frame"</code></pre>
+</div>
+</div>
+<p>We can change the columns of the dataframe as usual:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(hwdata) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Name"</span>, <span class="st">"Height"</span>,<span class="st">"Weight"</span>)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>hwdata</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     Name Height Weight
+1     Can   1.70     65
+2     Cem   1.75     66
+3   Hande   1.62     61
+4    Lale   1.76     64
+5    Arda   1.78     63
+6  Bilgin   1.77     84
+7     Cem   1.69     75
+8   Ozlem   1.75     65
+9     Ali   1.73     75
+10  Haluk   1.71     81</code></pre>
+</div>
+</div>
+<p>The function <code>read.table()</code> is quite versatile, and it has a lot of parameters to tune its behavior. The help documentation <code>help(read.table)</code> can be helpful.</p>
+<p>Let’s read a new data file <em>mydata2.txt</em>. It has a header row, and we want to set the column names of the resulting data frame accordingly:</p>
+<pre><code>Name Height Weight
+Can 1.70 65
+Cem 1.75 66
+Hande 1.62 61
+Lale 1.76 64
+Arda 1.78 63
+Bilgin 1.77 84
+Cem 1.69 75
+Ozlem 1.75 65
+Ali 1.73 75
+Haluk 1.71 81</code></pre>
+<p>All we need is to set the <code>header</code> parameter to <code>TRUE</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>hwdata <span class="ot">&lt;-</span> <span class="fu">read.table</span>(<span class="st">"mydata2.txt"</span>,<span class="at">header =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>hwdata</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     Name Height Weight
+1     Can   1.70     65
+2     Cem   1.75     66
+3   Hande   1.62     61
+4    Lale   1.76     64
+5    Arda   1.78     63
+6  Bilgin   1.77     84
+7     Cem   1.69     75
+8   Ozlem   1.75     65
+9     Ali   1.73     75
+10  Haluk   1.71     81</code></pre>
+</div>
+</div>
+<p>Now we have another file <em>mydata3.txt</em> whose fields are separated with commas, instead of spaces:</p>
+<pre><code> Name,Height,Weight
+ Can,1.70,65
+ Cem,1.75,66
+ Hande,1.62,61
+ Lale,1.76,64
+ Arda,1.78,63
+ Bilgin,1.77,84
+ Cem,1.69,75
+ Ozlem,1.75,65
+ Ali,1.73,75
+ Haluk,1.71,81</code></pre>
+<p>To accomodate for that, we set the <code>sep</code> parameter to the separator character, comma.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>hwdata <span class="ot">&lt;-</span> <span class="fu">read.table</span>(<span class="st">"mydata3.txt"</span>,<span class="at">header =</span> <span class="cn">TRUE</span>, <span class="at">sep=</span><span class="st">","</span>)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>hwdata</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     Name Height Weight
+1     Can   1.70     65
+2     Cem   1.75     66
+3   Hande   1.62     61
+4    Lale   1.76     64
+5    Arda   1.78     63
+6  Bilgin   1.77     84
+7     Cem   1.69     75
+8   Ozlem   1.75     65
+9     Ali   1.73     75
+10  Haluk   1.71     81</code></pre>
+</div>
+</div>
+<p>Now consider a more complicated data file <em>mydata4.txt</em>, which contains some comments added by the data collector.</p>
+<pre><code> Name,Height,Weight
+ Can,1.70,65
+ Cem,1.75,66
+ # Here is a comment
+ Hande,1.62,61
+ Lale,1.76,64
+ Arda,1.78,63
+ Bilgin,1.77,84 # another comment
+ Cem,1.69,75
+ Ozlem,1.75,65
+ Ali,1.73,75
+ Haluk,1.71,81</code></pre>
+<p>The comment character can be set with the <code>comment.char</code> parameter to <code>read.table()</code>. Then, everything on a line starting with <code>#</code> is ignored:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>hwdata <span class="ot">&lt;-</span> <span class="fu">read.table</span>(<span class="st">"mydata4.txt"</span>,<span class="at">header =</span> <span class="cn">TRUE</span>, <span class="at">sep=</span><span class="st">","</span>, <span class="at">comment.char=</span><span class="st">"#"</span>)</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>hwdata</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     Name Height Weight
+1     Can   1.70     65
+2     Cem   1.75     66
+3   Hande   1.62     61
+4    Lale   1.76     64
+5    Arda   1.78     63
+6  Bilgin   1.77     84
+7     Cem   1.69     75
+8   Ozlem   1.75     65
+9     Ali   1.73     75
+10  Haluk   1.71     81</code></pre>
+</div>
+</div>
+<p>Actually, this was a redundant setting, because by default <code>comment.char</code> is already set to <code>"#"</code>.</p>
+<p>Sometimes the separator character can be used in a text field, such as the space character in the column for names. In such cases, we use quotes to delimit the column’s content, as below (<em>mydata5.txt</em>):</p>
+<pre><code> Name Height Weight
+ "Can Can" 1.70 65
+ "Cem Cem" 1.75 66
+ "Hande Hande" 1.62 61
+ "Lale Lale" 1.76 64
+ "Arda Arda" 1.78 63
+ "Bilgin Bilgin" 1.77 84
+ "Cem Cim" 1.69 75
+ "Ozlem Ozlem" 1.75 65
+ "Ali Ali" 1.73 75
+ "Haluk Haluk" 1.71 81</code></pre>
+<p>The function <code>read.table()</code> recognizes the single- or double quotes by default.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>hwdata <span class="ot">&lt;-</span> <span class="fu">read.table</span>(<span class="st">"mydata5.txt"</span>, <span class="at">header=</span><span class="cn">TRUE</span>)</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>hwdata</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>            Name Height Weight
+1        Can Can   1.70     65
+2        Cem Cem   1.75     66
+3    Hande Hande   1.62     61
+4      Lale Lale   1.76     64
+5      Arda Arda   1.78     63
+6  Bilgin Bilgin   1.77     84
+7        Cem Cim   1.69     75
+8    Ozlem Ozlem   1.75     65
+9        Ali Ali   1.73     75
+10   Haluk Haluk   1.71     81</code></pre>
+</div>
+</div>
+<p>Other quote characters can be specified using the <code>quote</code> parameter. For example, consider the data file <em>mydata6.txt</em>:</p>
+<pre><code> Name Height Weight
+ %Can Can% 1.70 65
+ %Cem Cem% 1.75 66
+ %Hande Hande% 1.62 61
+ %Lale Lale% 1.76 64
+ %Arda Arda% 1.78 63
+ %Bilgin Bilgin% 1.77 84
+ %Cem Cim% 1.69 75
+ %Ozlem Ozlem% 1.75 65
+ %Ali Ali% 1.73 75
+ %Haluk Haluk% 1.71 81</code></pre>
+</section>
+<section id="writing-data-to-a-file" class="level2">
+<h2 class="anchored" data-anchor-id="writing-data-to-a-file">Writing data to a file</h2>
+<p>Suppose that we process the data file by, e.g., adding some columns.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>hwdata <span class="ot">&lt;-</span> <span class="fu">read.table</span>(<span class="st">"mydata6.txt"</span>, <span class="at">header=</span><span class="cn">TRUE</span>, <span class="at">quote=</span><span class="st">"%"</span>)</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>hwdata<span class="sc">$</span>BMI <span class="ot">&lt;-</span> hwdata<span class="sc">$</span>Weight <span class="sc">/</span> hwdata<span class="sc">$</span>Height<span class="sc">^</span><span class="dv">2</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>hwdata<span class="sc">$</span>BMI <span class="ot">&lt;-</span> <span class="fu">round</span>(hwdata<span class="sc">$</span>BMI, <span class="dv">2</span>)  <span class="co"># round to two decimal places</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>hwdata</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>            Name Height Weight   BMI
+1        Can Can   1.70     65 22.49
+2        Cem Cem   1.75     66 21.55
+3    Hande Hande   1.62     61 23.24
+4      Lale Lale   1.76     64 20.66
+5      Arda Arda   1.78     63 19.88
+6  Bilgin Bilgin   1.77     84 26.81
+7        Cem Cim   1.69     75 26.26
+8    Ozlem Ozlem   1.75     65 21.22
+9        Ali Ali   1.73     75 25.06
+10   Haluk Haluk   1.71     81 27.70</code></pre>
+</div>
+</div>
+<p>The function <code>write.table()</code> can be used to store a data frame in a file.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write.table</span>(hwdata,<span class="st">"mydata7.txt"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>This function writes the table together with the row names and column names:</p>
+<pre><code>"Name" "Height" "Weight" "BMI"
+"1" "Can Can" 1.7 65 22.49
+"2" "Cem Cem" 1.75 66 21.55
+"3" "Hande Hande" 1.62 61 23.24
+"4" "Lale Lale" 1.76 64 20.66
+"5" "Arda Arda" 1.78 63 19.88
+"6" "Bilgin Bilgin" 1.77 84 26.81
+"7" "Cem Cim" 1.69 75 26.26
+"8" "Ozlem Ozlem" 1.75 65 21.22
+"9" "Ali Ali" 1.73 75 25.06
+"10" "Haluk Haluk" 1.71 81 27.7</code></pre>
+<p>We can omit the row and column names with the following parameter settings.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write.table</span>(hwdata,<span class="st">"mydata7.txt"</span>,<span class="at">row.names =</span> <span class="cn">FALSE</span>, <span class="at">col.names =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 
 
 </section>
-
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -483,10 +733,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
+      <a href="./Factors.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Factors and categories</span></span>
+      </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./First Steps.html" class="pagination-link">
-        <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">First steps in R</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./More plotting.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">More plot types</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
